@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 from tensorflow import keras
 
-EPOCHS = 200 
+EPOCHS = 250 
 BATCH_SIZE = 128
 VERBOSE = 1
 NB_CLASSES = 10 # number of outputs = number of digits
@@ -45,7 +45,7 @@ model.add(keras.layers.Dense(N_HIDDEN,
                              input_shape=(RESHAPED,),
                              name='dense_layer_2',
                              activation='relu'))
-model.add(keras.layers.Dense(DROPOUT))
+model.add(keras.layers.Dropout(DROPOUT))
 model.add(keras.layers.Dense(NB_CLASSES,
                              name='dense_layer_3', activation='softmax'))
 
@@ -56,6 +56,8 @@ model.summary()
 model.compile(optimizer='SGD',
               loss='categorical_crossentropy',
               metrics=['accuracy'])
+              #optimizer function used after each epoch(times exposed to training set) adjusts weights so that objective function is minimized
+              #optimizers allow you to not get "stuck" in local minima in order to find glabal minima
 
 # Training the model
 model.fit(x_train, y_train,
@@ -64,4 +66,4 @@ model.fit(x_train, y_train,
 
 # evalute the model
 test_loss, test_acc = model.evaluate(x_test, y_test)
-print('test accuracty', test_acc)
+print('test accuracy:', test_acc)

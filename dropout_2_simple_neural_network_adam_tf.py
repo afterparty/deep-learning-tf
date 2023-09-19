@@ -1,12 +1,13 @@
 import tensorflow as tf
 import numpy as np
 from tensorflow import keras
+from keras.regularizers import l2, activity_l2
 
-EPOCHS = 200 
+EPOCHS = 100 
 BATCH_SIZE = 128
 VERBOSE = 1
 NB_CLASSES = 10 # number of outputs = number of digits
-N_HIDDEN = 128
+N_HIDDEN = 512
 VALIDATION_SPLIT = 0.2 # how much TRAIN is reserved for VALIDATION
 DROPOUT = 0.3 #randomized drop out to generalize the program
 
@@ -47,16 +48,18 @@ model.add(keras.layers.Dense(N_HIDDEN,
                              activation='relu'))
 model.add(keras.layers.Dropout(DROPOUT))
 model.add(keras.layers.Dense(NB_CLASSES,
-                             name='dense_layer_3', activation='softmax'))
+                             name='dense_layer_3', activation='softmax')
 
 # summary of the model
 model.summary()
 
 # compiling the model
-model.compile(optimizer='RMSProp', #optimizer function used after each epoch(times exposed to training set) adjusts weights so that objective function is minimized
-                                   #optimizers allow you to not get "stuck" in local minima in order to find glabal minima
+model.compile(optimizer='Adam',
               loss='categorical_crossentropy',
+              #loss function is the evaluation of the guess and the actual result
               metrics=['accuracy'])
+              #optimizer function used after each epoch(times exposed to training set) adjusts weights so that objective function is minimized
+              #optimizers allow you to not get "stuck" in local minima in order to find glabal minima
 
 # Training the model
 model.fit(x_train, y_train,
@@ -65,4 +68,4 @@ model.fit(x_train, y_train,
 
 # evalute the model
 test_loss, test_acc = model.evaluate(x_test, y_test)
-print('test accuracty', test_acc)
+print('test accuracy:', test_acc)
